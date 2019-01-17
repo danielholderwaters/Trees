@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[2]:
-
-
 import pandas as pd
 # Path of the file to read
 iowa_file_path = '../input/home-data-for-ml-course/train.csv'
@@ -12,9 +6,6 @@ iowa_file_path = '../input/home-data-for-ml-course/train.csv'
 home_data = pd.read_csv(iowa_file_path)
 #summary statistics
 home_data.describe()
-
-
-# In[ ]:
 
 
 #average lot size (rounded to nearest integer)
@@ -26,8 +17,6 @@ now = datetime.datetime.now()
 newest_home_age = now.year - home_data['YearBuilt'].max()
 print(newest_home_age)
 
-
-# In[ ]:
 
 
 # print the list of columns in the dataset to find the name of the prediction target
@@ -47,16 +36,10 @@ print(X.describe())
 print(X.head())
 
 
-# In[ ]:
-
-
 # Import the train_test_split function
 from sklearn.model_selection import train_test_split
 
 train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 1)
-
-
-# In[ ]:
 
 
 #Specify the model
@@ -69,9 +52,6 @@ iowa_model.fit(train_X, train_y)
 val_predictions = iowa_model.predict(val_X)
 
 
-# In[ ]:
-
-
 # print the top few validation predictions
 print(val_predictions[0:5])
 
@@ -79,16 +59,11 @@ print(val_predictions[0:5])
 print(val_y[0:5].values.tolist())
 
 
-# In[ ]:
-
-
 from sklearn.metrics import mean_absolute_error
 
 val_mae = mean_absolute_error(val_y, val_predictions)
 print(val_mae)
 
-
-# In[ ]:
 
 
 #lets improve the model by finding the number of leaves that would minimize MAE
@@ -109,18 +84,12 @@ for x in candidate_max_leaf_nodes:
     LeafMAE.append(mae)
 
 
-# In[ ]:
-
-
 #results of the optimization
 results = {'Numleaves': candidate_max_leaf_nodes, 'MAE': LeafMAE}
 results = pd.DataFrame(results)
 results.head()
 BestFit = int(results.loc[results['MAE'].idxmin()]['Numleaves'])
 print(BestFit)
-
-
-# In[ ]:
 
 
 #lets plot these trials to visualize the minimization
@@ -131,18 +100,12 @@ plt.ylabel("Mean Absolute Error")
 plt.show()
 
 
-# In[ ]:
-
-
 #Final model specification
 final_model = DecisionTreeRegressor(max_leaf_nodes = BestFit, random_state=0)
 final_model.fit(train_X, train_y)
 preds_val = final_model.predict(val_X)
 mae = mean_absolute_error(val_y, preds_val)
 print(mae)
-
-
-# In[ ]:
 
 
 #Random Forests
